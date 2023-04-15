@@ -13,6 +13,9 @@ class NeuralNetModel:
     
     def predict(self, data):
         return np.argmax(self.model.predict(data), axis=1) + 1 # +1 because cover types are 1-indexed
+    
+    def save(self, path):
+        self.model.save(path)
 
 def build_model(hp):
     num_hidden_layers = hp.Int("num_hidden_layers", 1, 3)
@@ -62,7 +65,7 @@ def find_best_model(train_data, train_labels, validation_data, validation_labels
 
     return model
 
-def train_model(model, train_data, train_labels, validation_data, validation_labels, test_data, test_labels, epochs=10):
+def train_model(model, train_data, train_labels, validation_data, validation_labels, epochs=10):
     return model.fit(
         train_data,
         train_labels,
@@ -78,12 +81,12 @@ def train_model(model, train_data, train_labels, validation_data, validation_lab
     )
 
 
-def get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, test_features, test_labels, epochs=10, get_history=False):
+def get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, epochs=10, get_history=False):
     train_labels = np.subtract(train_labels, 1)
     validation_labels = np.subtract(validation_labels, 1)
 
     model = find_best_model(train_features, train_labels, validation_features, validation_labels)
-    train_history = train_model(model, train_features, train_labels, validation_features, validation_labels, test_features, test_labels, epochs=epochs)
+    train_history = train_model(model, train_features, train_labels, validation_features, validation_labels, epochs=epochs)
 
     model = NeuralNetModel(model)
 
@@ -91,6 +94,10 @@ def get_fully_trained_model(train_features, train_labels, validation_features, v
         return model, train_history
     else:
         return model
+
+def get_model_from_directory(directory):
+    model = keras.models.load_model(directory)
+    return NeuralNetModel(model)
 
 # Implementation of the task 3
 def main():
@@ -102,7 +109,7 @@ def main():
     validation_features, validation_labels = split_to_features_and_labels(val_data)
     test_features, test_labels = split_to_features_and_labels(test_data)
     
-    model, train_history = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, test_features, test_labels, get_history=True)
+    model, train_history = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, get_history=True)
 
     # We want 2 plots, one for the loss and one for the accuracy
     fig, axs = plt.subplots(1, 2)
