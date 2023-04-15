@@ -44,27 +44,23 @@ app = FastAPI()
 @app.get("/api/heuristic")
 async def heuristic(features: Features):
     model = heuristic_model
-    print(features.data)
     
     return get_prediction(model, features.data)
 
 @app.get("/api/svc")
 async def svc(features: Features):
     model = svc_model
-    print(features.data)
     
     return get_prediction(model, features.data)
 
 @app.get("/api/knn")
 async def knn(features: Features):
     model = knn_model
-    print(features.data)
     
     return get_prediction(model, features.data)
 
 @app.get("/api/neural_net")
 async def neural_net(features: Features):
     model = neural_net_model
-    print(features.data)
     
     return get_prediction(model, features.data)
