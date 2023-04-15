@@ -12,12 +12,7 @@ def train_knn_model(train_features, train_labels):
 
     return model
 
-
-# This model achieves 0.62 accuracy and 0.76 balanced accuracy -- worse than the k-nearest neighbours, but not tragic for a baseline
-# (Also, I takes quite longer to train, about 10 minutes on my computer)
-def train_svc(train_features, train_labels):
-
-    num_samples = 5000
+def train_svc(train_features, train_labels, num_samples=5000):
 
     train_features = train_features[:num_samples]
     train_labels = train_labels[:num_samples]

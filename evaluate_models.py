@@ -31,7 +31,7 @@ def main():
     heuristic_model = HeuristicClassifier()
     knn_model = train_knn_model(train_features, train_labels)
     svc_model = train_svc(train_features, train_labels)
-    neural_net_model = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, test_features, test_labels, epochs=1)
+    neural_net_model = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, test_features, test_labels, epochs=10)
 
     models = [heuristic_model, knn_model, svc_model, neural_net_model]
     model_names = ["Heuristic", "KNN", "SVC", "Neural Net"]
