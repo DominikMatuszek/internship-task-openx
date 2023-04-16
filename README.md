@@ -79,7 +79,7 @@ That approach, however, failed after 3 hours of hyperparameter tuning.
 
 ![Model training curves after use of a Hyperband](plots/tuner_fail.png)
 
-Because of that, I've decided to remove class balancing from the model to see what happens. Apparently, it was able to perform much better than before. I've also decided to use random search instead of hyperband, as it was much faster. Models tested by the random search can be found in the `hyperparameter_tuning` directory.
+Because of that, I've decided to remove class balancing from the model to see what happens. Apparently, it was able to perform much better than before. I've also decided to use random search instead of hyperband, as it was faster. Models tested by the random search can be found in the `hyperparameter_tuning` directory.
 
 ![Model training curves after removing class balancing](plots/curves.png)
 
