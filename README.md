@@ -29,6 +29,8 @@ Should this not be enough, here's a quick overview of the API:
 
 ## Subtask completion
 
+Note: please include the dataset (named `covtype.data`) in the directory with rest of the files for them to work. This doesn't apply to the Docker image, since it automatically downloads the dataset during its buildtime. 
+
 ### 1. Loading the data
 
 I've created a few functions to load the data from the CSV file. They can be found in the `load_data.py` file. Their semantics should be pretty self-explanatory; as requested, no feature engineering was done. 
