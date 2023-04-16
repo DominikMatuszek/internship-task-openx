@@ -1,6 +1,6 @@
 import keras_tuner as kt
 from tensorflow import keras
-from load_data import split_data, load_data, split_to_features_and_labels, split_to_train_test_val
+from load_data import load_data, split_to_features_and_labels, split_to_train_test_val, get_class_weights
 import numpy as np
 
 from matplotlib import pyplot as plt
@@ -12,7 +12,7 @@ class NeuralNetModel:
         self.model = model
     
     def predict(self, data):
-        return np.argmax(self.model.predict(data), axis=1) + 1 # +1 because cover types are 1-indexed
+        return np.argmax(self.model.predict(data), axis=1) + 1 # +1 because cover types are indexed from 1
     
     def save(self, path):
         self.model.save(path)
@@ -41,14 +41,14 @@ def build_model(hp):
 
     return model
 
-def find_best_model(train_data, train_labels, validation_data, validation_labels):
+def find_best_model(train_data, train_labels, validation_data, validation_labels, overwrite=False):
     tuner = kt.RandomSearch(
         build_model,
         objective="val_loss",
         max_trials=10,
         executions_per_trial=3,
         directory="hyperparameter_tuning",
-        overwrite=False, # Set to True if you haven't run this before
+        overwrite=overwrite, 
         project_name="covtype"
     )
 
@@ -56,7 +56,13 @@ def find_best_model(train_data, train_labels, validation_data, validation_labels
         train_data,
         train_labels,
         epochs=5,
-        validation_data=(validation_data, validation_labels)
+        validation_data=(validation_data, validation_labels),
+        callbacks=[
+            keras.callbacks.EarlyStopping(
+                monitor="val_loss",
+                patience=3,
+                restore_best_weights=True)
+            ]
     )
 
     tuner.results_summary()
@@ -65,28 +71,25 @@ def find_best_model(train_data, train_labels, validation_data, validation_labels
 
     return model
 
-def train_model(model, train_data, train_labels, validation_data, validation_labels, epochs=10):
-    return model.fit(
-        train_data,
+def get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, epochs=10, get_history=False, overwrite=False):
+    train_labels = np.subtract(train_labels, 1)
+    validation_labels = np.subtract(validation_labels, 1)
+
+    model = find_best_model(train_features, train_labels, validation_features, validation_labels, overwrite=overwrite)
+    
+    train_history = model.fit(
+        train_features,
         train_labels,
         epochs=epochs,
-        validation_data=(validation_data, validation_labels), 
+        validation_data=(validation_features, validation_labels), 
         callbacks=[
             keras.callbacks.EarlyStopping(
                 monitor="val_loss",
-                patience=2,
+                patience=3,
                 restore_best_weights=True
             ),
         ]
     )
-
-
-def get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, epochs=10, get_history=False):
-    train_labels = np.subtract(train_labels, 1)
-    validation_labels = np.subtract(validation_labels, 1)
-
-    model = find_best_model(train_features, train_labels, validation_features, validation_labels)
-    train_history = train_model(model, train_features, train_labels, validation_features, validation_labels, epochs=epochs)
 
     model = NeuralNetModel(model)
 
@@ -107,9 +110,10 @@ def main():
 
     train_features, train_labels = split_to_features_and_labels(train_data)
     validation_features, validation_labels = split_to_features_and_labels(val_data)
-    test_features, test_labels = split_to_features_and_labels(test_data)
     
     model, train_history = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, get_history=True)
+
+    model.save("model/neural_net_model")
 
     # We want 2 plots, one for the loss and one for the accuracy
     fig, axs = plt.subplots(1, 2)

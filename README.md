@@ -61,17 +61,29 @@ Main function of the file `train_neural_net.py` tries to find optimal hyperparam
 
 #### Hyperparameter search
 
-I've used the `keras-tuner` library and `Hyperband` algorithm to perform the following hyperparameter search:
+I've tried a few different approaches to hyperparameter search.
+
+First, I've used the `keras-tuner` library and `Hyperband` algorithm to perform the following hyperparameter search:
 
 * number of hidden layers in the network (1 - 3)
-* number of neurons in each hidden layer (64 - 512)
+* number of perceptrons in each hidden layer (64 - 512)
 * whether to use a dropout layer (True, False)
 * dropout rate (0.1 - 0.5)
 * learning rate (0.0001 - 0.01)
 
-The loss used is sparse categorical crossentropy, the optimizer is Adam and the activation function on the last layer is softmax. Activation functions on other layers are ReLU functions. Due to limited resources, I didn't include those in the hyperparameter search.
+The loss used was sparse categorical crossentropy, the optimizer was Adam and the activation function on the last layer was softmax. Activation functions on other layers were ReLU functions. Due to limited resources, I didn't include those in the hyperparameter search.
 
-Because of the unbalanced nature of the dataset, I've used the `get_class_weights` function from `load_data.py` to calculate the class weights for the model to train with.
+Furthermore, because of the unbalanced nature of the dataset, I had thought that the model might benefit from setting class weights; because of that I had used the `get_class_weights` function from `load_data.py` to calculate the class weights for the model to train with.
+
+That approach, however, failed after 3 hours of hyperparameter tuning.
+
+![Model training curves after use of a Hyperband](plots/tuner_fail.png)
+
+Because of that, I've decided to remove class balancing from the model to see what happens. Apparently, it was able to perform much better than before. I've also decided to use random search instead of hyperband, as it was much faster. Models tested by the random search can be found in the `hyperparameter_tuning` directory.
+
+![Model training curves after removing class balancing](plots/curves.png)
+
+While worse than the KNN, I deemed its results satisfactory given resources available to me.
 
 #### NeuralNetModel class
 
@@ -87,6 +99,8 @@ The `evaluate_models.py` loads the data, splits it into train, test and validati
 ![](plots/test_accuracies.png)
 * a plot of the confusion matrix for each model on the test set
 ![](plots/confusion_matrices.png)
+
+It's worth noting that because I've determined the best hyperparameters for the neural network model earlier, there could have been some overlap between the test and validation set used earlier on (to determine whether the model is performing correctly during hyperparameter search). Obviously, no test data was shown directly to the model, but it could have been indirectly used to determine the best hyperparameters. To prevent this behaviour, you can change the positional `overwrite` argument in the `get_fully_trained_model` function call to `True`, which will force the hyperparameter search to be performed again.
 
 ### 6. API
 
