@@ -106,7 +106,7 @@ It's worth noting that because I've determined the best hyperparameters for the 
 
 The API was created with the FastAPI framework.
 
-The `main.py` file provides an entry point for the uvicorn server. It first loads all the models, assuming the neural net model is saved in the `models/neural_net_model` directory. Because the model's size is quite small, I've decided to include it in the repository, so there are no additional steps required to run it. 
+The `main.py` file provides an entry point for the uvicorn server (you can type `uvicorn main:app` to run it, assuming that you have all dependencies installed). It first loads all the models, assuming the neural net model is saved in the `models/neural_net_model` directory. Because the model's size is quite small, I've decided to include it in the repository, so there are no additional steps required to run it. 
 
 Please note that the `main.py` file trains the SVC and KNN models from scratch (which doesn't take long), but there is need to download the `covtype.data` file from the UCI repository. This is done automatically by the Dockerfile. If you need to run the API without Docker, you need to download the file manually, unpack it and name it `covtype.data`.
 
