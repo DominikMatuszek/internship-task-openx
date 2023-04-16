@@ -113,7 +113,7 @@ def main():
     
     model, train_history = get_fully_trained_model(train_features, train_labels, validation_features, validation_labels, get_history=True)
 
-    model.save("model/neural_net_model")
+    model.save("models/neural_net_model")
 
     # We want 2 plots, one for the loss and one for the accuracy
     fig, axs = plt.subplots(1, 2)
