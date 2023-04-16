@@ -16,24 +16,3 @@ def classify_one(data):
 class HeuristicClassifier:
     def predict(self, data):
         return np.array([classify_one(d) for d in data])
-
-
-if __name__ == "__main__":
-    # Small test to check if the heuristic is working correctly
-    
-    from load_data import load_data, split_to_features_and_labels
-    from sklearn.metrics import accuracy_score, balanced_accuracy_score
-
-    def classify_all(data):
-        return np.array([classify_one(d) for d in data])
-
-    data = load_data("covtype.data")
-    features, labels = split_to_features_and_labels(data)
-
-    predictions = classify_all(features)
-
-    print(predictions.shape)
-    print(labels.shape)
-
-    print("Accuracy: ", accuracy_score(labels, predictions))
-    print("Balanced accuracy: ", balanced_accuracy_score(labels, predictions))

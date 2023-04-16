@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from heuristic import HeuristicClassifier
 from scikit_models import train_knn_model, train_svc
-from train_neural_net import get_fully_trained_model
+from train_neural_net import get_model_from_directory, get_fully_trained_model
 from load_data import load_data, split_to_train_test_val, split_to_features_and_labels 
 
 from matplotlib import pyplot as plt
@@ -27,6 +27,9 @@ def main():
     train_features, train_labels = split_to_features_and_labels(train_data)
     validation_features, validation_labels = split_to_features_and_labels(val_data)
     test_features, test_labels = split_to_features_and_labels(test_data)
+
+    # Note that we need to train all of these from scratch here, because different models could've been trained on different splits of the data otherwise
+    # So, to ensure that test data is not seen by any of them in any way, we are training all of them here for the purposes of the evaluation.
 
     heuristic_model = HeuristicClassifier()
     knn_model = train_knn_model(train_features, train_labels)

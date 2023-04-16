@@ -46,6 +46,14 @@ def get_preprocessed_data(dir_path, test_size=0.2):
     data = load_data(dir_path)
     return get_splits(data, test_size)
 
+def get_class_weights(labels, start=1, end=8):
+    # Each class weight is number of samples in the dataset divided by number of samples in the class
+    class_weights = {}
+    for i in range(start, end):
+        class_weights[i] = len(labels) / np.count_nonzero(labels == i)
+    
+    return class_weights
+
 def main():
     train_features, train_labels, test_features, test_labels = get_preprocessed_data("covtype.data")
 
@@ -55,6 +63,8 @@ def main():
     print("Test labels shape: ", test_labels.shape)
 
     print(train_features[0])
+
+    print("Class weights: ", get_class_weights(train_labels))
 
 if __name__ == '__main__':
     main()
