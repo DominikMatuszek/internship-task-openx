@@ -41,25 +41,25 @@ class Features(BaseModel):
 
 app = FastAPI()
 
-@app.get("/api/heuristic")
+@app.post("/api/heuristic")
 async def heuristic(features: Features):
     model = heuristic_model
     
     return get_prediction(model, features.data)
 
-@app.get("/api/svc")
+@app.post("/api/svc")
 async def svc(features: Features):
     model = svc_model
     
     return get_prediction(model, features.data)
 
-@app.get("/api/knn")
+@app.post("/api/knn")
 async def knn(features: Features):
     model = knn_model
     
     return get_prediction(model, features.data)
 
-@app.get("/api/neural_net")
+@app.post("/api/neural_net")
 async def neural_net(features: Features):
     model = neural_net_model
     
