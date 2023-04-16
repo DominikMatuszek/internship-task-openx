@@ -86,7 +86,7 @@ The `evaluate_models.py` loads the data, splits it into train, test and validati
 * a plot of the accuracy and balanced accuracy for each model on the test set
 ![](plots/test_accuracies.png)
 * a plot of the confusion matrix for each model on the test set
-![](plots/test_confusion_matrices.png)
+![](plots/confusion_matrices.png)
 
 ### 6. API
 
