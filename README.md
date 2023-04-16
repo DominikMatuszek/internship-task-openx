@@ -1,4 +1,4 @@
-# Internship Task For Openx
+# Internship Task For OpenX
 
 This repository contains code for my internship task for OpenX. 
 
@@ -57,7 +57,7 @@ Support Vector Classifier with an rbf kernel. I've also tried other kernels, but
 
 ### 4. Neural network
 
-The main function of the file `train_neural_net.py` tries to find optimal hyperparameters for a multilayer perceptron with a dropout layer, then trains the model with the best hyperparameters. The model is then saved to the `models` directory. After training, the training curves are plotted for the user to see.
+The main function of the `train_neural_net.py` file tries to find optimal hyperparameters for a multilayer perceptron with a dropout layer, then trains the model with the best hyperparameters. The model is then saved to the `models` directory. After training, the training curves are plotted for the user to see.
 
 #### Hyperparameter search
 
@@ -87,20 +87,20 @@ While worse than the KNN, I deemed its results satisfactory given the resources 
 
 #### NeuralNetModel class
 
-To provide an interface that is consistent with the other models, I've created a `NeuralNetModel` class, which wraps around a tensorflow model and has 2 methods: `predict` and `save`. The `predict` method takes a single parameter, `data`, being a (batch_size, 54) array of features and returns a (batch_size,) array of predictions. The `save` method saves the tensorflow model to a given directory. 
+To provide an interface that is consistent with the other models, I've created a `NeuralNetModel` class, which wraps around a tensorflow model and has 2 methods: `predict` and `save`. The `predict` method takes a single parameter, `data`, being a `(batch_size, 54)` array of features and returns a `(batch_size,)` array of predictions. The `save` method saves the tensorflow model to a given directory. 
 
-Furthermore, in the `train_neural_net.py` is a `get_model_from_directory` function, which loads a tensorflow model from a given directory and wraps it in a `NeuralNetModel` object.
+Furthermore, in the `train_neural_net.py` file is the `get_model_from_directory` function, which loads a tensorflow model from a given directory and wraps it in a `NeuralNetModel` object.
 
 ### 5. Result evaluation
 
-The `evaluate_models.py` loads the data, splits it into train, test, and validation sets, trains all the models, and evaluates them on the common test set. It then creates 2 plots:
+The `evaluate_models.py` script loads the data, splits it into train, test, and validation sets, trains all the models, and evaluates them on the common test set. It then creates 2 plots:
 
 * a plot of the accuracy and balanced accuracy for each model on the test set
 ![](plots/test_accuracies.png)
 * a plot of the confusion matrix for each model on the test set
 ![](plots/confusion_matrices.png)
 
-It's worth noting that because I've determined the best hyperparameters for the neural network model earlier, there could have been some overlap between the test and validation set used earlier on (to determine whether the model is performing correctly during hyperparameter search). Obviously, no test data was shown directly to the model, but it could have been indirectly used to determine the best hyperparameters. To prevent this behaviour, you can change the positional `overwrite` argument in the `get_fully_trained_model` function call to `True`, which will force the hyperparameter search to be performed again.
+It's worth noting that because I've determined the best hyperparameters for the neural network model earlier, there could have been some overlap between the test and validation sets used earlier on (to determine whether the model is performing correctly during hyperparameter search). Obviously, no test data was shown directly to the model, but it could have been indirectly used to determine the best hyperparameters. To prevent this behaviour, you can change the positional `overwrite` argument in the `get_fully_trained_model` function call to `True`, which will force the hyperparameter search to be performed again.
 
 ### 6. API
 
